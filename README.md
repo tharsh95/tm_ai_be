@@ -1,52 +1,123 @@
-# FastAPI MongoDB Example
+# Taskym - Task Management Application
 
-A simple FastAPI application with MongoDB integration using Pydantic models.
+A full-stack task management application with FastAPI backend and React frontend.
 
-## Prerequisites
+## Docker Setup
 
-- Python 3.8+
-- MongoDB installed and running locally
-- Virtual environment (recommended)
+### Docker Compose Configuration
+```yaml
+version: '3'
 
-## Setup
+services:
+  client:
+    build:
+      context: ./client
+    image: tharsh95/taskym-client:latest
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
 
-1. Clone the repository
-2. Create and activate virtual environment:
+  server:
+    build:
+      context: ./server
+    image: tharsh95/taskym-server:latest
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_URL=mongodb://mongodb:27017
+      - DATABASE_NAME=taskym
+      - JWT_SECRET=your-super-secret-key-here-replace-in-production
+      - JWT_ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=90
+      - OPENAI_API_KEY=your-openai-api-key
+
+  mongodb:
+    build:
+      context: ./mongodb
+    image: tharsh95/taskym-mongodb:latest
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+
+volumes:
+  mongodb_data:
+```
+
+## Getting Started
+
+### Running the Application
+
+1. Make sure you have Docker and Docker Compose installed
+3. Run the following command by creating a docker-compose.yml and pasting the above yml file :
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+docker compose up 
 ```
 
-3. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+### Accessing the Application
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:8000
+- API Documentation: http://localhost:8000/docs
 
-4. Make sure MongoDB is running locally on port 27017
+## Application Flow
 
-5. Create a `.env` file with the following content:
-```
-MONGODB_URL=mongodb://localhost:27017
-DATABASE_NAME=fastapi_db
-```
+### 1. User Registration & Authentication
+- Navigate to http://localhost:5173
+- Click "Register" to create a new account
+- Provide email and password
+- After registration, you'll be redirected to login
+- Login with your credentials
 
-## Running the Application
+### 2. Dashboard
+After successful login, you'll see the main dashboard with:
+- Header with search functionality and user menu
+- Project information section
+- Four task columns:
+  - To Do
+  - In Progress
+  - Closed
+  - Frozen
 
-Start the FastAPI server:
-```bash
-uvicorn app.main:app --reload
-```
+### 3. Task Management
+#### Creating Tasks
+- Click "+" in todo column
+- Fill in task details:
+  - Title
+  - Description
+  - Priority (Low/Medium/High)
+  - Add Participants
+  - Brief (AI-generated task summary)
 
-The API will be available at http://localhost:8000
+#### Managing Tasks
+- **View**: Click on any task to see details
+- **Edit**: Click edit icon to modify task details
+- **Delete**: Remove tasks using delete icon
+- **Status Change**: Update task status from task modal
 
-## API Documentation
+### 4. Search Functionality
+- Use the search bar in the header
+- Real-time filtering of tasks across all columns
+- Search by task title & status
 
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+### 5. User Features
+- Logout functionality
 
-## Available Endpoints
+### 6. AI Integration
+- Automatic task description generation
+- Smart task descriptions
+- Priority suggestions
 
-- `GET /`: Welcome message
-- `POST /items/`: Create a new item
-- `GET /items/`: Get all items
-- `GET /items/{item_id}`: Get a specific item by ID 
+## Security Features
+- JWT-based authentication
+- Secure password hashing
+- Protected API endpoints
+- Environment variable configuration
+
+## Additional Features
+- Responsive design for mobile and desktop
+- Real-time updates
+- Persistent data storage with MongoDB
+- OpenAI integration for task enhancement 
