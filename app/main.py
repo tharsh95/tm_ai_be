@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import auth, task
-from .core.config import settings
+from app.routers import auth, task
+from app.core.config import settings
 
 app = FastAPI(
     title="FastAPI Auth Example",
