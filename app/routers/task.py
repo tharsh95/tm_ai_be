@@ -10,7 +10,8 @@ from ..core.ai_agent import generate_task_description
 
 router = APIRouter(
     prefix="/tasks",
-    tags=["tasks"]
+    tags=["tasks"],
+    redirect_slashes=False
 )
 @router.get("/participants", response_model=Dict)
 async def get_unique_participants(
