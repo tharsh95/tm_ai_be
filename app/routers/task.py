@@ -64,7 +64,7 @@ async def search_tasks(
             task["participants"] = []
     
     return tasks
-@router.post("/", response_model=TaskResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=TaskResponse, status_code=status.HTTP_201_CREATED)
 async def create_task(
     task: TaskCreate,
     current_user: UserResponse = Depends(get_current_user)
@@ -87,7 +87,7 @@ async def create_task(
     
     return task_dict
 
-@router.get("/", response_model=Dict[str, List[TaskResponse]])
+@router.get("", response_model=Dict[str, List[TaskResponse]])
 async def get_tasks(
     # current_user: UserResponse = Depends(get_current_user)
 ):
