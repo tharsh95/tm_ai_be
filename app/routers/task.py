@@ -88,7 +88,7 @@ async def create_task(
 
 @router.get("/", response_model=Dict[str, List[TaskResponse]])
 async def get_tasks(
-    current_user: UserResponse = Depends(get_current_user)
+    # current_user: UserResponse = Depends(get_current_user)
 ):
     tasks_by_column = {
         "todo": [],
